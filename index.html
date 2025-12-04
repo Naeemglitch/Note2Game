@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameYourNotes - Flappy Quiz</title>
+  <title>GameYourNotes - AI Quiz Games</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>GameYourNotes - Flappy Quiz</h1>
+    <h1>GameYourNotes - AI Quiz Games</h1>
   </header>
 
   <section id="notes-section">
-    <h2>Lägg till dina egna anteckningar</h2>
-    <textarea id="notesInput" placeholder="Skriv dina anteckningar här, en per rad"></textarea>
-    <button onclick="submitNotes()">Spara anteckningar</button>
+    <h2>Lägg till dina anteckningar</h2>
+    <textarea id="notesInput" placeholder="Skriv dina anteckningar, en per rad"></textarea>
+    <button onclick="submitNotes()">Skapa frågor automatiskt</button>
+  </section>
+
+  <section id="game-menu">
+    <h2>Välj ett spel</h2>
+    <button onclick="startGame('flappy')">Flappy Quiz</button>
+    <button onclick="startGame('geometry')">Geometry Dash Quiz</button>
   </section>
 
   <section id="game-section">
