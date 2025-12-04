@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameYourNotes - Flappy Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>GameYourNotes - Flappy Quiz</h1>
+  </header>
+
+  <section id="notes-section">
+    <h2>Lägg till dina egna anteckningar</h2>
+    <textarea id="notesInput" placeholder="Skriv dina anteckningar här, en per rad"></textarea>
+    <button onclick="submitNotes()">Spara anteckningar</button>
+  </section>
+
+  <section id="game-section">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div id="quiz" class="hidden">
+      <p id="question"></p>
+      <input type="text" id="answer" placeholder="Skriv ditt svar">
+      <button onclick="checkAnswer()">Skicka</button>
+      <p id="result"></p>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
