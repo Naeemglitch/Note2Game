@@ -23,7 +23,7 @@ header {
   display: none;
 }
 
-#quiz, #notes-section {
+#quiz, #notes-section, #game-menu {
   background-color: #e6f7ff;
   padding: 20px;
   border-radius: 10px;
