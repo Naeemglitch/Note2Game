@@ -8,30 +8,62 @@ let obstacles = [];
 let frame = 0;
 let gameOver = false;
 
-let notes = []; // stores your notes
+let notes = []; // your raw notes
+let questions = []; // AI-generated questions
 let currentQuestion = { question: "Vad är 2 + 2?", answer: "4" };
 
+let currentGame = null;
+
+// -------------------- Notes & AI-like question generator --------------------
 function submitNotes() {
   const input = document.getElementById("notesInput").value;
   const lines = input.split("\n");
-  notes = [];
-  lines.forEach(line => {
-    if(line.includes(":")) {
-      const parts = line.split(":");
-      notes.push({ question: parts[0].trim(), answer: parts[1].trim() });
-    }
-  });
-  alert("Anteckningar sparade! Spela spelet nu.");
+  notes = lines.filter(line => line.trim() !== "");
+  questions = lines.map(line => generateQuestion(line));
+  alert("Anteckningar sparade och frågor skapade!");
+}
+
+function generateQuestion(note) {
+  // Simple AI-like logic: split at "=" or "is" or ":" to create a question/answer pair
+  let q = note;
+  let a = note;
+  if(note.includes(":")) {
+    const parts = note.split(":");
+    q = `Vad är ${parts[0].trim()}?`;
+    a = parts[1].trim();
+  } else if(note.toLowerCase().includes("is")) {
+    const parts = note.split(/is/i);
+    q = `Vad är ${parts[0].trim()}?`;
+    a = parts[1].trim();
+  } else if(note.includes("=")) {
+    const parts = note.split("=");
+    q = `Vad är ${parts[0].trim()}?`;
+    a = parts[1].trim();
+  }
+  return { question: q, answer: a };
 }
 
 function getRandomQuestion() {
-  if(notes.length > 0) {
-    const index = Math.floor(Math.random() * notes.length);
-    return notes[index];
+  if(questions.length > 0) {
+    const index = Math.floor(Math.random() * questions.length);
+    return questions[index];
   }
   return { question: "Vad är 2 + 2?", answer: "4" };
 }
 
+// -------------------- Game selection --------------------
+function startGame(game) {
+  currentGame = game;
+  bird.y = 300;
+  bird.velocity = 0;
+  obstacles = [];
+  frame = 0;
+  gameOver = false;
+  document.getElementById("quiz").classList.add("hidden");
+  canvas.style.display = "block";
+}
+
+// -------------------- Flappy / Geometry Dash logic --------------------
 function drawBird() {
   ctx.fillStyle = "yellow";
   ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
@@ -48,7 +80,7 @@ function drawObstacles() {
 function updateObstacles() {
   if(frame % 100 === 0) {
     let top = Math.random() * 200 + 50;
-    let gap = 150;
+    let gap = currentGame === "flappy" ? 150 : 100;
     obstacles.push({x: canvas.width, width: 50, top: top, bottomY: top + gap});
   }
 
@@ -106,9 +138,14 @@ function resetGame() {
 function gameLoop() {
   ctx.clearRect(0,0,canvas.width, canvas.height);
 
-  if(!gameOver) {
-    bird.velocity += gravity;
-    bird.y += bird.velocity;
+  if(!gameOver && currentGame) {
+    if(currentGame === "flappy") {
+      bird.velocity += gravity;
+      bird.y += bird.velocity;
+    } else if(currentGame === "geometry") {
+      bird.y = 500; // fixed height for Geometry Dash style
+    }
+
     updateObstacles();
     drawBird();
     drawObstacles();
@@ -120,7 +157,8 @@ function gameLoop() {
 }
 
 document.addEventListener("keydown", (e) => {
-  if(e.code === "Space") bird.velocity = jump;
+  if(e.code === "Space" && currentGame === "flappy") bird.velocity = jump;
+  if(e.code === "Space" && currentGame === "geometry") bird.y -= 150; // jump for Geometry Dash
 });
 
 gameLoop();
